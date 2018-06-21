@@ -9,6 +9,7 @@ import socket
 import binascii
 
 if len(sys.argv) != 2:
+    print "Generate a %s with a configurable listening port" % DESCRIPTION
     print "Usage: %s <port>" % sys.argv[0]
     sys.exit(1)
 
@@ -63,6 +64,7 @@ if r != 0:
 print "\nC format:\n%s\n" % c_style
 print "\nnasm format:\n%s\n" % nasm_style
 
+print "Shellcode length: %d bytes" % len(raw)
 if "\x00" in raw:
     print "WARNING: Null byte is present!"
 else:

