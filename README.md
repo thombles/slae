@@ -21,4 +21,8 @@ Run the build script with the desired listening port.
 
     ./build.py 4444
 
+## Assignment 2: TCP Reverse Shell
 
+Run the build script with the IP address and port of the remote listener. An error will be returned if either will introduce null bytes into the shellcode.
+
+    ./build.py 127.1.1.1 4444
