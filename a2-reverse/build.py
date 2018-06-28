@@ -44,7 +44,7 @@ if has_null(port, 2):
     print "ERROR: Port contains null"
     sys.exit(1)
     
-print "Building %s on port %d" % (DESCRIPTION, port)
+print "Building %s" % DESCRIPTION
 
 print "Assembling..."
 r = os.system("nasm -f elf32 -o %s.o -DREMOTE_IP=%d -DREMOTE_PORT=%d %s.nasm" % (TARGET, remote_ip_nbo, port, TARGET))
