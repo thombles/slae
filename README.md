@@ -26,3 +26,9 @@ Run the build script with the desired listening port.
 Run the build script with the IP address and port of the remote listener. An error will be returned if either will introduce null bytes into the shellcode.
 
     ./build.py 127.1.1.1 4444
+
+## Assignment 3: Egghunter
+
+Run the build script with the raw text of an egg script. It will output both the hunter shellcode and the egg shellcode with the appropriate header appended.
+
+    ./build.py ../a1-bind/bind.raw
