@@ -3,7 +3,7 @@
 ; 2018-07-05 Thomas Karpiniec
 
 ; Compile with encoded PAYLOAD
-;     nasm -f elf32 -o decoder.o -DPAYLOAD="\x31..." decoder.nasm
+;     nasm -f elf32 -o decoder.o -DPAYLOAD="0x90,0x90,..." decoder.nasm
 
 global _start
        
