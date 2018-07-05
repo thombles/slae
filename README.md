@@ -32,3 +32,17 @@ Run the build script with the IP address and port of the remote listener. An err
 Run the build script with the raw text of an egg script. It will output both the hunter shellcode and the egg shellcode with the appropriate header appended.
 
     ./build.py ../a1-bind/bind.raw
+
+## Assignment 4: Coder/Decoder
+
+Some unencoded payload is required to build this, as it will be included in encoded form inside the decoder. For testing I have created a separate shellcode under `/execve-stack-shell`. Build it:
+
+    ./build.py
+
+This will produce a `shell.raw` file containing the assembled code.
+
+Then inside `/a4-coder`:
+
+    ./build.py ../execve-stack-shell/shell.raw
+
+The build script will encode shell.raw and embed it in the assembled product.
