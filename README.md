@@ -46,3 +46,7 @@ Then inside `/a4-coder`:
     ./build.py ../execve-stack-shell/shell.raw
 
 The build script will encode shell.raw and embed it in the assembled product.
+
+## Assignment 5: Analysis of MSF payloads
+
+There is nothing to build here. The .raw files and passwd file mentioned in the analysis blog post are kept here for reference.
