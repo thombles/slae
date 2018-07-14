@@ -2,7 +2,7 @@
 ; for nc bind shell on port 13377
 ; Original at: http://shell-storm.org/shellcode/files/shellcode-804.php
 ; 2018-07-14 SLAE-1294 assignment 6
-; Size has increased from 64 bytes (not 62 as listed) to 89 bytes (144%)
+; Size has increased from 64 bytes (not 62 as listed) to 89 bytes (139%)
 
 section .text
     global _start
