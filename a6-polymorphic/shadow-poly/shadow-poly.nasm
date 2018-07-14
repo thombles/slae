@@ -1,4 +1,4 @@
-; Polymorphic equivalent (plus bug fix)
+; Polymorphic equivalent
 ; for chmod 666 /etc/shadow shellcode
 ; Original at: http://shell-storm.org/shellcode/files/shellcode-355.php
 ; (Version in comments at the top)
