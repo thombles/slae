@@ -50,3 +50,13 @@ The build script will encode shell.raw and embed it in the assembled product.
 ## Assignment 5: Analysis of MSF payloads
 
 There is nothing to build here. The .raw files and passwd file mentioned in the analysis blog post are kept here for reference.
+
+## Assignment 6: Shellcode polymorphism
+
+There is some miscellaneous stuff about the original shellcodes from shell-storm in the *-original folders. The *-poly folders contain my reworked version of each. No parameters are required for any of these.
+
+      ./build.py
+
+* nc: Creates a bind shell by invoking /bin/nc with suitable parameters
+* shadow: Uses a chmod syscall to set /etc/shadow to 0666 permissions
+* iptables: Invokes iptables -F to clear firewall rules
