@@ -60,3 +60,17 @@ There is some miscellaneous stuff about the original shellcodes from shell-storm
 * nc: Creates a bind shell by invoking /bin/nc with suitable parameters
 * shadow: Uses a chmod syscall to set /etc/shadow to 0666 permissions
 * iptables: Invokes iptables -F to clear firewall rules
+
+## Assignment 7: Crypter and decrypter
+
+This one has two programs, `crypter` and `decrypter`. The shellcode to be encrypted must be prepared separately. For example, to use the execve-stack-shell shellcode and the password `abcdef` run these commands:
+
+     ./build_crypter.sh
+     cat ../execve-stack-shell/shell.raw | ./crypter abcdef | tee encrypted.h
+     ./build_decrypter.sh
+
+This will build the decrypter with the encrypted shellcode inside it, via the `encrypted.h` header. It can be run by passing the chosen password as a command line parameter:
+
+     ./decrypter abcdef
+
+
